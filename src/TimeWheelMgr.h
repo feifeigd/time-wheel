@@ -1,8 +1,15 @@
-#pragma once
+ï»¿#pragma once
 
-#define TIME_WHELL_COUNT 1
+enum Granularity : uint64_t
+{
+	MS = 1,
+	Second = 1000,
+	Minute = 60 * Second,
+};
 
-// ×î¸ß¾«¶È 1000 ºÁÃë
+#define TIME_WHELL_COUNT 2	// äºŒçº§æ—¶é—´è½®
+
+// æœ€é«˜ç²¾åº¦ 1000 æ¯«ç§’
 #define TW_RESOLUTION 1000
 
 class Timer;
@@ -14,7 +21,7 @@ public:
 	TimeWheelMgr();
 	~TimeWheelMgr();
 
-	/// ÓÉÍâ²¿ÓÃ×î¸ß¾«¶ÈTW_RESOLUTION Çý¶¯
+	/// ç”±å¤–éƒ¨ç”¨æœ€é«˜ç²¾åº¦TW_RESOLUTION é©±åŠ¨
 	void tick();
 
 	void AddTimer(Timer& timer);

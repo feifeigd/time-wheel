@@ -1,6 +1,5 @@
-#include "Timer.h"
+ï»¿#include "Timer.h"
 #include "TimeWheel.h"
-#include "TimeWheelMgr.h"
 #include <cassert>
 #include <iostream>
 using namespace std;
@@ -11,7 +10,7 @@ using namespace std;
 TimeWheel::TimeWheel(TimeWheelMgr& _mgr, uint16_t _index, std::string _name, uint16_t _wheel_size, Granularity _granularity) : mgr(_mgr), index(_index), name(_name), wheel_size(_wheel_size), granularity(_granularity)
 {
 	spokes = new tw_links[wheel_size];
-	for (size_t i = 0; i < wheel_size; i++)	// wheel_size ¸ö¿ÕµÄË«Á´±í
+	for (size_t i = 0; i < wheel_size; i++)	// wheel_size ä¸ªç©ºçš„åŒé“¾è¡¨
 	{
 		tw_links& spoke = spokes[i];
 		spoke.next = &spoke;
@@ -21,11 +20,11 @@ TimeWheel::TimeWheel(TimeWheelMgr& _mgr, uint16_t _index, std::string _name, uin
 
 void TimeWheel::tick() {
 	bool tigger_next_level = false;
-	if (++spoke_index == wheel_size) {	// ÅÜÒ»È¦£¬ÒªÖ´ĞĞÏÂÒ»²ã
+	if (++spoke_index == wheel_size) {	// è·‘ä¸€åœˆï¼Œè¦æ‰§è¡Œä¸‹ä¸€å±‚
 		spoke_index = 0;
 		tigger_next_level = true;
 	}
-	if (tigger_next_level) {	// Çı¶¯ÏÂÒ»¼¶
+	if (tigger_next_level) {	// é©±åŠ¨ä¸‹ä¸€çº§
 		uint16_t idx = index + 1;
 		if (idx < TIME_WHELL_COUNT)
 		{
@@ -38,7 +37,7 @@ void TimeWheel::tick() {
 	while ((tw_links*)timer != spoke)
 	{
 		tw_links* next = timer->links.next;
-		Timer* next_timer = (Timer*)next;
+		
 		assert(timer->delay >= granularity);
 		if (timer->rotation_count != 0)
 		{
@@ -50,17 +49,17 @@ void TimeWheel::tick() {
 			timer->stop();
 			if (timer->delay > TW_RESOLUTION)
 			{
-				mgr.AddTimer(*timer);	// ÏÂÒ»¼¶»áÍùÇ°Ò»¼¶Ç¨ÒÆ
+				mgr.AddTimer(*timer);	// ä¸‹ä¸€çº§ä¼šå¾€å‰ä¸€çº§è¿ç§»
 			}
 			else {
-				cout << "spoke_index=" << spoke_index << endl;
+				cout << "index=" << index << ",spoke_index=" << spoke_index << endl;	// è¿™é‡Œindexå¤§æ¦‚ç‡æ˜¯0
 				if (-1 != timer->repeat)
 				{
 					--timer->repeat;
 				}
 				if (timer->callback)
 					timer->callback();
-				if (timer->repeat && timer->periodic_delay > 0)	// ÖØ¸´Ö´ĞĞ
+				if (timer->repeat && timer->periodic_delay > 0)	// é‡å¤æ‰§è¡Œ
 				{
 					timer->delay += timer->periodic_delay;
 					mgr.AddTimer(*timer);

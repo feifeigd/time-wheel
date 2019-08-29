@@ -1,10 +1,11 @@
-#include "Timer.h"
+ï»¿#include "Timer.h"
 #include "TimeWheel.h"
 #include "TimeWheelMgr.h"
 #include <cassert>
 
 TimeWheelMgr::TimeWheelMgr() {
-	tws[0] = new TimeWheel(*this, 0, "second", 60, Granularity::Second);
+	tws[0] = new TimeWheel(*this, 0, "second", 60, Granularity::Second);	// ç§’è½®
+	tws[1] = new TimeWheel(*this, 1, "minute", 60, Granularity::Minute);	// åˆ†è½®
 }
 
 TimeWheelMgr::~TimeWheelMgr() {
@@ -20,14 +21,14 @@ void TimeWheelMgr::tick() {
 	tw->tick();
 }
 
-// 1Äê=366Ìì= 366*24*3600*1000 = 31,622,400,000ºÁÃë
+// 1å¹´=366å¤©= 366*24*3600*1000 = 31,622,400,000æ¯«ç§’
 void TimeWheelMgr::AddTimer(Timer& timer) {
 	TimeWheel* tw = tws[0];
 	assert(tw);
 
-	KillTimer(timer);	// Èç¹ûÖ®Ç°¾ÍÔÚÁ´±íÀïÃæ£¬Òª´ÓÖ®Ç°µÄÁ´±íÍÑÀë
+	KillTimer(timer);	// å¦‚æžœä¹‹å‰å°±åœ¨é“¾è¡¨é‡Œé¢ï¼Œè¦ä»Žä¹‹å‰çš„é“¾è¡¨è„±ç¦»
 
-	uint64_t ticks = 1;	// ÍùºóÑÓ³Ù¶àÉÙ¸ö¸ñ×Ó£¬ÖÁÉÙÒ»¸ñ£¬²»×ãÒ»¸ñÒ²ËãÒ»¸ñ
+	uint64_t ticks = 1;	// å¾€åŽå»¶è¿Ÿå¤šå°‘ä¸ªæ ¼å­ï¼Œè‡³å°‘ä¸€æ ¼ï¼Œä¸è¶³ä¸€æ ¼ä¹Ÿç®—ä¸€æ ¼
 	for (size_t i = TIME_WHELL_COUNT - 1; i >= 0; --i)
 	{
 		tw = tws[i];

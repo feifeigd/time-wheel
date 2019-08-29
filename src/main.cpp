@@ -1,4 +1,4 @@
-#include "Timer.h"
+﻿#include "Timer.h"
 #include "TimeWheelMgr.h"
 
 #include <Windows.h>
@@ -10,19 +10,29 @@ using namespace std;
 int main(){
 	TimeWheelMgr timerMgr;
 
-	Timer timer(10 * 1000, []() {
-		cout << "10�붨ʱ��,tick=" << GetTickCount64() << endl;
+	uint64_t interval = 10 * Granularity::Second;
+	Timer timer(interval, []() {
+		cout << "10秒定时器,tick=" << GetTickCount64() << endl;
 	});
 	timer.repeat = -1;
-	timer.periodic_delay = 10 * 1000;
+	timer.periodic_delay = interval;
 	timerMgr.AddTimer(timer);
 
-	Timer timer1(30 * 1000, []() {
-		cout << "30�붨ʱ��,tick=" << GetTickCount64() << endl;
+	interval = 30 * Granularity::Second;
+	Timer timer1(interval, []() {
+		cout << "30秒定时器,tick=" << GetTickCount64() << endl;
 	});
 	timer1.repeat = -1;
-	timer1.periodic_delay = 30 * 1000;
+	timer1.periodic_delay = interval;
 	timerMgr.AddTimer(timer1);
+
+	interval = 30 * Granularity::Second + 1 * Granularity::Minute;
+	Timer timer2(interval, []() {
+		cout << "1分30秒定时器,tick=" << GetTickCount64() << endl;
+	});
+	timer2.repeat = -1;
+	timer2.periodic_delay = interval;
+	timerMgr.AddTimer(timer2);
 
 	uint64_t last_tick = GetTickCount64();
 	cout << "start tick:" << last_tick << endl;
@@ -35,7 +45,7 @@ int main(){
 			timerMgr.tick();
 			last_tick += TW_RESOLUTION;
 		}
-		Sleep(66);	// 1000ms / 15 ֡ = 66.66
+		Sleep(66);	// 1000ms / 15 帧 = 66.66
 	}
 	return 0;
 }

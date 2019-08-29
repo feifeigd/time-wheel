@@ -1,12 +1,6 @@
 #pragma once
+#include "TimeWheelMgr.h"
 #include <string>
-
-enum Granularity : uint64_t
-{
-	MS		= 1,
-	Second	= 1000,
-	Minute	= 60 * Second,
-};
 
 struct tw_links;
 class TimeWheelMgr;
