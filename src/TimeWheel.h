@@ -1,22 +1,25 @@
-#pragma once
+ï»¿#pragma once
 #include "TimeWheelMgr.h"
 #include <string>
 
 struct tw_links;
-class TimeWheelMgr;
+
 class TimeWheel {
 	std::string		name;
-	uint16_t		wheel_size;		// Ê±¼äÂÖÓĞ¶àÉÙ¸ñ
-	uint16_t		spoke_index = 0;	// µ±Ç°Ö´ĞĞµÄË÷Òı	
-	Granularity		granularity;	// Á£¶È£¬µ¥Î»ºÁÃë, Ò»¸ötickµÄºÁÃëÊı
+	uint16_t		wheel_size;		// æ—¶é—´è½®æœ‰å¤šå°‘æ ¼, æœ€å¤šä¸€æ¯«ç§’ä¸€æ ¼ï¼Œä¸€åœˆ1000æ ¼
+	uint16_t		spoke_index{};	// å½“å‰æ‰§è¡Œçš„ç´¢å¼•	
+	Granularity		granularity;	// ç²’åº¦ï¼Œå•ä½æ¯«ç§’, ä¸€ä¸ªtickçš„æ¯«ç§’æ•°
 	TimeWheelMgr&	mgr;
-	uint16_t		index;	// ÔÚTimeWheelMgrÖĞµÄË÷Òı
+	uint16_t const	index;	// åœ¨TimeWheelMgrä¸­çš„ç´¢å¼•
+	uint64_t		m_ticks{};
 	friend class TimeWheelMgr;	
 
 	tw_links* spokes;
+	void update(); // æ¯æ¬¡å¢åŠ TW_RESOLUTIONæ¯«ç§’
 	void tick();
-	/// @param ticks ·Å½øÑÓ³Ù¶àÉÙ¸ñ×ÓµÄÁ´±í´¦
-	void AddTimer(Timer& timer, uint64_t ticks);
+	/// @param ticks æ”¾è¿›å»¶è¿Ÿå¤šå°‘æ ¼å­çš„é“¾è¡¨å¤„
+	void AddTimer(Timer& timer, uint32_t ticks);
 public:
 	TimeWheel(TimeWheelMgr& _mgr, uint16_t _index, std::string _name, uint16_t _wheel_size, Granularity _granularity);
+	~TimeWheel();
 };

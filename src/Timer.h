@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 
 #include <cstdint>
 #include <functional>
 
-/// Ë«Á´±í
+/// åŒé“¾è¡¨
 struct tw_links
 {
 	tw_links* next;
@@ -12,23 +12,23 @@ struct tw_links
 
 class TimeWheelMgr;
 class Timer {
-	tw_links links{};	// Á´±íÖ¸Õë·ÅÔÚ×îÇ°Ãæ
+	tw_links links{};	// é“¾è¡¨æŒ‡é’ˆæ”¾åœ¨æœ€å‰é¢
 	friend class TimeWheel;
 	friend class TimeWheelMgr;
 
-	uint64_t delay;	///< ¶àÉÙºÁÃëÖ®ºóÖ´ĞĞ
-	uint64_t rotation_count = 0;
+	uint64_t	delay;	///< å¤šå°‘æ¯«ç§’ä¹‹åæ‰§è¡Œï¼Œç›¸å¯¹äºTimeWheelMgr::last_tick
+	uint8_t		rotation_count{};
 	using Callback = std::function<void()>;
 	Callback callback;
 
-	void prepare();
 	bool running()const;
 	void stop();
 
 public:
-	Timer(uint64_t _delay, Callback && _callback);
+	Timer(uint64_t interval, Callback && _callback);
+	Timer(uint64_t _delay, uint64_t _periodic_delay,Callback&& _callback);
 	~Timer();
 
-	int16_t repeat = 1;	///< -1±íÊ¾ÎŞÏŞ´Î
+	int16_t repeat = 1;	///< -1è¡¨ç¤ºæ— é™æ¬¡
 	uint64_t periodic_delay = 0;
 };

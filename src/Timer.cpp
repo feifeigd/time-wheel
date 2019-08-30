@@ -1,7 +1,12 @@
 #include "Timer.h"
 
 
-Timer::Timer(uint64_t _delay, Callback&& _callback) : delay(_delay), callback(_callback)
+Timer::Timer(uint64_t interval, Callback&& _callback) : delay(interval), periodic_delay(interval), callback(_callback), repeat(-1)
+{
+
+}
+
+Timer::Timer(uint64_t _delay, uint64_t _periodic_delay, Callback&& _callback) : delay(_delay), periodic_delay(_periodic_delay), callback(_callback)
 {
 
 }
@@ -9,10 +14,6 @@ Timer::Timer(uint64_t _delay, Callback&& _callback) : delay(_delay), callback(_c
 Timer::~Timer() {
 	stop();
 }
-
-//void Timer::prepare() {
-//
-//}
 
 bool Timer::running()const {
 	return !!links.next;

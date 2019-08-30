@@ -1,51 +1,66 @@
-﻿#include "Timer.h"
+﻿
 #include "TimeWheelMgr.h"
 
-#include <Windows.h>
+#include <Windows.h>	// Sleep
 #include <cstdint>
 #include <iostream>
 using namespace std;
 
+void print_now() {
+	SYSTEMTIME sys;
+	GetLocalTime(&sys);
+	printf("%4d/%02d/%02d %02d:%02d:%02d.%03d \n", sys.wYear, sys.wMonth, sys.wDay, sys.wHour, sys.wMinute, sys.wSecond, sys.wMilliseconds);
+}
 
 int main(){
 	TimeWheelMgr timerMgr;
 
 	uint64_t interval = 10 * Granularity::Second;
-	Timer timer(interval, []() {
-		cout << "10秒定时器,tick=" << GetTickCount64() << endl;
+	Timer timer(interval, [&]() {		
+		print_now();
+		cout << "times=" << timerMgr.times() << ",10秒定时器" << endl;
 	});
-	timer.repeat = -1;
-	timer.periodic_delay = interval;
 	timerMgr.AddTimer(timer);
 
 	interval = 30 * Granularity::Second;
-	Timer timer1(interval, []() {
-		cout << "30秒定时器,tick=" << GetTickCount64() << endl;
+	Timer timer1(interval, [&]() {
+		print_now();
+		cout << "times=" << timerMgr.times() << ",30秒定时器" << endl;
 	});
-	timer1.repeat = -1;
-	timer1.periodic_delay = interval;
 	timerMgr.AddTimer(timer1);
 
 	interval = 30 * Granularity::Second + 1 * Granularity::Minute;
-	Timer timer2(interval, []() {
-		cout << "1分30秒定时器,tick=" << GetTickCount64() << endl;
+	Timer timer2(interval, [&]() {
+		print_now();
+		cout << "times=" << timerMgr.times() << ",1分30秒定时器" << endl;
 	});
-	timer2.repeat = -1;
-	timer2.periodic_delay = interval;
-	timerMgr.AddTimer(timer2);
+	 timerMgr.AddTimer(timer2);
 
-	uint64_t last_tick = GetTickCount64();
-	cout << "start tick:" << last_tick << endl;
-	uint64_t second = 0;
-	while(true){
-		uint64_t now = GetTickCount64();
-		while (now > last_tick + TW_RESOLUTION)
-		{
-			cout << "second=" << ++second << ",tick=" << GetTickCount64() << endl;
-			timerMgr.tick();
-			last_tick += TW_RESOLUTION;
-		}
-		Sleep(66);	// 1000ms / 15 帧 = 66.66
+	interval = 30 * Granularity::Second + 1 * Granularity::Hour;
+	Timer timer3(interval, [&]() {
+		print_now();
+		cout << "times=" << timerMgr.times() << ",1时30秒定时器" << endl;
+	});
+	timerMgr.AddTimer(timer3);
+
+	interval = 30 * Granularity::Second + 1 * Granularity::Day;
+	Timer timer4(interval, [&]() {
+		print_now();
+		cout << "times=" << timerMgr.times() << ",1天30秒定时器" << endl;
+	});
+	timerMgr.AddTimer(timer4);
+
+	interval = 30 * Granularity::Second + 1 * Granularity::Week;
+	Timer timer5(interval, [&]() {
+		print_now();
+		cout << "times=" << timerMgr.times() << ",1星期30秒定时器" << endl;
+	});
+	timerMgr.AddTimer(timer5);
+
+	while(true){		
+		int64_t next_tick = timerMgr.update();
+		if(next_tick > 0)
+			Sleep(next_tick);
 	}
 	return 0;
 }
