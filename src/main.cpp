@@ -16,7 +16,7 @@ int main(){
 	TimeWheelMgr timerMgr;
 
 	uint64_t interval = 10 * Granularity::Second;
-	Timer timer(interval, [&]() {		
+	/*Timer timer(interval, [&]() {		
 		print_now();
 		cout << "times=" << timerMgr.times() << ",10秒定时器" << endl;
 	});
@@ -27,7 +27,7 @@ int main(){
 		print_now();
 		cout << "times=" << timerMgr.times() << ",30秒定时器" << endl;
 	});
-	timerMgr.AddTimer(timer1);
+	timerMgr.AddTimer(timer1);*/
 
 	interval = 30 * Granularity::Second + 1 * Granularity::Minute;
 	Timer timer2(interval, [&]() {
@@ -57,6 +57,7 @@ int main(){
 	});
 	timerMgr.AddTimer(timer5);
 
+	print_now();
 	while(true){		
 		int64_t next_tick = timerMgr.update();
 		if(next_tick > 0)

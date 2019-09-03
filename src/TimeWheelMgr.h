@@ -2,6 +2,8 @@
 
 #include "Timer.h"
 
+#include <cstdint>
+
 /// 下级一定要是上级的倍数
 enum Granularity : uint64_t
 {
