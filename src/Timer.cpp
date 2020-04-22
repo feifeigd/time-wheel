@@ -1,12 +1,14 @@
 #include "Timer.h"
 
 
-Timer::Timer(uint64_t interval, Callback&& _callback) : delay(interval), periodic_delay(interval), callback(_callback), repeat(-1)
+Timer::Timer(uint64_t interval, Callback&& _callback, bool _own ) 
+	: delay(interval), periodic_delay(interval), callback(_callback), repeat(-1), m_own(_own)
 {
 
 }
 
-Timer::Timer(uint64_t _delay, uint64_t _periodic_delay, Callback&& _callback) : delay(_delay), periodic_delay(_periodic_delay), callback(_callback)
+Timer::Timer(uint64_t _delay, uint64_t _periodic_delay, Callback&& _callback, bool _own ) 
+	: delay(_delay), periodic_delay(_periodic_delay), callback(_callback), m_own(_own)
 {
 
 }

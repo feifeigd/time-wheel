@@ -20,15 +20,17 @@ class Timer {
 	uint8_t		rotation_count{};
 	using Callback = std::function<void()>;
 	Callback callback;
+	bool m_own;	// 要释放内存
 
 	bool running()const;
 	void stop();
 
 public:
-	Timer(uint64_t interval, Callback && _callback);
-	Timer(uint64_t _delay, uint64_t _periodic_delay,Callback&& _callback);
+	Timer(uint64_t interval, Callback&& _callback, bool _own = false);
+	Timer(uint64_t _delay, uint64_t _periodic_delay,Callback&& _callback, bool _own = false);
 	~Timer();
 
+	bool own()const { return m_own; }
 	int16_t repeat = 1;	///< -1表示无限次
 	uint64_t periodic_delay = 0;
 };

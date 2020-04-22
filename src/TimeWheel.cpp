@@ -27,6 +27,8 @@ TimeWheel::~TimeWheel() {
 		while ((tw_links*)timer != spoke)
 		{
 			timer->stop();
+			if ( timer->own())
+				delete timer;
 			timer = (Timer*)spoke->next;
 		}
 	}
@@ -89,6 +91,8 @@ void TimeWheel::tick() {
 				}
 				if (timer->callback)
 					timer->callback();
+				if (!timer->repeat && timer->own())
+					delete timer;
 			}
 		}
 		timer = (Timer*)next;
